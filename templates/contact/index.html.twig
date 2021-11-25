@@ -12,9 +12,34 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ customerName }}</h1>
-    {% if city is defined and city is not empty %}
-        <h2>Tu es dans la ville de {{ city }}</h2>
+    {% if id is defined and id is not empty %}
+        <h1>Hello {{ contact.firstname }}</h1>
+        <ul>
+            <li>Id = {{ contact.id }}</li>
+            <li>Nom = {{ contact.name }}</li>
+            <li>Prénom = {{ contact.firstname }}</li>
+            <li>Mail = {{ contact.email }}</li>
+            <li>Sujet {{ contact.subject }}</li>
+            <li>Message = {{ contact.message }}</li>
+            <li>Newsletter = {{ contact.newletter }}</li>
+        </ul>
+    {% else %}
+        <h1>Hello {{ customerName }}</h1>
+        {% set numberOfContact = contact | length %}
+
+        {% if city is defined and city is not empty %}
+            <h2>Tu es dans la ville de {{ city }}</h2>
+        {% endif %}
+
+        {% if (numberOfContact > 0) %}
+            {{ dump(contact) }}
+
+            {% for c in contact %}
+                <a href="https://localhost:8000/contactId/{{ c.id }}">{{ c.name }} {{ c.firstname }}</a>
+            {% endfor %}
+        {% endif %}
     {% endif %}
+
+{{ form(form) }}
 </div>
 {% endblock %}
