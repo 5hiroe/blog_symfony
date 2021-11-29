@@ -8,6 +8,7 @@ use App\Repository\ContactRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ContactController extends AbstractController
@@ -27,9 +28,10 @@ class ContactController extends AbstractController
     /**
      * @Route("/contact/{city}", name="contact")
      */
-    public function index(Request $request, string $city = ""): Response
+    public function index(Request $request, SessionInterface $session, string $city = ""): Response
     {
         $customerName = $request->get('customerName');
+        $typefav = $session->get('typefav');
 
         $form = $this->FormContactBase($request);
 
@@ -38,6 +40,26 @@ class ContactController extends AbstractController
             'city' => $city,
             'contact' => $this->contactRepository->findAll(),
             'form' => $form,
+            'typefav' => $typefav
+
+        ]);
+    }
+    /**
+     * @Route("/")
+     */
+    public function indexHome(Request $request, SessionInterface $session): Response
+    {
+        $customerName = $request->get('customerName');
+        $typefav = $session->get('typefav');
+
+        if (empty($customerName) && !isset($customerName))
+        {
+            $customerName = " ";
+        }
+
+        return $this->renderForm('contact/index.html.twig', [
+            'customerName' => $customerName,
+            'typefav' => $typefav
 
         ]);
     }
@@ -45,15 +67,18 @@ class ContactController extends AbstractController
     /**
      * @Route("/contactId/{id}", name="contactId")
      */
-    public function contactId(Request $request, string $id): Response
+    public function contactId(Request $request, string $id, SessionInterface $session): Response
     {
         //$contact = $this->contactRepository->find($id);
         $form = $this->FormContactBase($request);
+        $typefav = $session->get('typefav');
+
 
         return $this->renderForm('contact/index.html.twig', [
             'id' => $id,
             'contact' => $this->contactRepository->find($id),
             'form' => $form,
+            'typefav' => $typefav
         ]);
     }
 

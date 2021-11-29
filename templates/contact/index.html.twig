@@ -23,7 +23,7 @@
             <li>Message = {{ contact.message }}</li>
             <li>Newsletter = {{ contact.newletter }}</li>
         </ul>
-    {% else %}
+    {% elseif contact is defined and contact is not empty %}
         <h1>Hello {{ customerName }}</h1>
         {% set numberOfContact = contact | length %}
 
@@ -38,8 +38,14 @@
                 <a href="https://localhost:8000/contactId/{{ c.id }}">{{ c.name }} {{ c.firstname }}</a>
             {% endfor %}
         {% endif %}
+    {% else %}
+        <h1>Hello {{ customerName }}</h1>
     {% endif %}
-
-{{ form(form) }}
+{% if form is defined %}
+    {{ form(form) }}
+{% endif %}
+{% if typefav is defined %}
+    <h3>Type Favori : {{ typefav }}</h3>
+{% endif %}
 </div>
 {% endblock %}

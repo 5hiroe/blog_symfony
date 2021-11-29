@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\ArticleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ArticleController extends AbstractController
@@ -24,9 +25,11 @@ class ArticleController extends AbstractController
     /**
      * @Route("/article", name="article")
      */
-    public function index(): Response
+    public function index(SessionInterface $session): Response
     {
         $articles = $this->articleRepository->findAll();
+        $session->set('typefav', 'article');
+
 
         return $this->render('article/index.html.twig', [
             'articles' => $articles,
